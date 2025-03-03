@@ -252,3 +252,6 @@ app.get("/scrape/:product", async (req, res) => {
 app.listen(PORT, () =>
   console.log(`Server running at http://localhost:${PORT}`)
 );
+app.get("/", (req, res) => {
+  res.send("Welcome to the PricePoka's Scraper API!");
+});
