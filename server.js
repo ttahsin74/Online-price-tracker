@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const cheerio = require("cheerio");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,8 +26,8 @@ const scrapeStarTech = async (product) => {
         $(element).find(".p-item-img img").attr("src") || "Image not found";
       const link =
         $(element).find(".p-item-img a").attr("href") || "Link not found";
-
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -54,7 +55,8 @@ const scrapeTechLand = async (product) => {
       const link =
         $(element).find(".product-img").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -81,7 +83,8 @@ const scrapeRyans = async (product) => {
       const link =
         $(element).find(".image-box a").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -108,7 +111,8 @@ const scrapeBinary = async (product) => {
       const link =
         $(element).find(".p-item-img a").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -134,7 +138,8 @@ const scrapePcHouse = async (product) => {
       const link =
         $(element).find(".product-img").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -178,7 +183,8 @@ const scrapePotakaIT = async (product) => {
       const link =
         $(element).find(".product-img").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
@@ -204,7 +210,8 @@ const scrapeUltraTech = async (product) => {
       const link =
         $(element).find(".product-img").attr("href") || "Link not found";
 
-      products.push({ name, price, img, link });
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
     });
 
     return products;
