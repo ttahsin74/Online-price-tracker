@@ -16,7 +16,7 @@ const scrapeStarTech = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $(".brand img").attr("src") || "logo not found";
     $(".p-item").each((index, element) => {
       const name =
         $(element).find(".p-item-name").text().trim() || "Name not found";
@@ -30,7 +30,7 @@ const scrapeStarTech = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping StarTech:", error);
     return [];
@@ -45,7 +45,7 @@ const scrapeTechLand = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $("#logo img").attr("src") || "logo not found";
     $(".product-layout").each((index, element) => {
       const name = $(element).find(".name").text().trim() || "Name not found";
       const price =
@@ -59,13 +59,12 @@ const scrapeTechLand = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
   }
 };
-
 const scrapeRyans = async (product) => {
   try {
     const response = await axios.get(
@@ -73,7 +72,7 @@ const scrapeRyans = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $(".main-logo img").attr("src") || "logo not found";
     $(".category-single-product").each((index, element) => {
       const name =
         $(element).find(".card-text a").text().trim() || "Name not found";
@@ -87,7 +86,7 @@ const scrapeRyans = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -100,7 +99,7 @@ const scrapeBinary = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $(".homepage_two__log svg").attr("src") || "logo not found";
     $(".single_product").each((index, element) => {
       const name =
         $(element).find(".p-item-name").text().trim() || "Name not found";
@@ -115,7 +114,7 @@ const scrapeBinary = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -128,7 +127,7 @@ const scrapePcHouse = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $("#logo img").attr("src") || "logo not found";
     $(".product-layout").each((index, element) => {
       const name = $(element).find(".name").text().trim() || "Name not found";
       const price =
@@ -142,57 +141,58 @@ const scrapePcHouse = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
   }
 };
-const scrapePotakaIT = async (product) => {
-  try {
-    const response = await axios.post(
-      `https://www.potakait.com/index.php?route=product/search&search=${product}`,
-      {
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-          Accept: "application/json, text/plain, */*",
-          "Accept-Encoding": "gzip, deflate, br",
-          Connection: "keep-alive",
-          "Upgrade-Insecure-Requests": "1",
-          "Cache-Control": "max-age=0",
-          TE: "Trailers",
-          DNT: "1", // Do Not Track header
-          Referer: "https://www.potakait.com", // Referer header may help
-          Origin: "https://www.potakait.com", // Sometimes needed
-          Cookie: "ar_debug=1",
-        },
-      }
-    );
+// const scrapePotakaIT = async (product) => {
+//   try {
+//     const response = await axios.post(
+//       `https://www.potakait.com/index.php?route=product/search&search=${product}`,
+//       {
+//         headers: {
+//           "User-Agent":
+//             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+//           Accept: "application/json, text/plain, */*",
+//           "Accept-Encoding": "gzip, deflate, br",
+//           Connection: "keep-alive",
+//           "Upgrade-Insecure-Requests": "1",
+//           "Cache-Control": "max-age=0",
+//           TE: "Trailers",
+//           DNT: "1", // Do Not Track header
+//           Referer: "https://www.potakait.com", // Referer header may help
+//           Origin: "https://www.potakait.com", // Sometimes needed
+//           Cookie: "ar_debug=1",
+//         },
+//       }
+//     );
 
-    const $ = cheerio.load(response.data);
-    const products = [];
+//     const $ = cheerio.load(response.data);
+//     const products = [];
 
-    $(".product-layout").each((index, element) => {
-      const name = $(element).find(".name").text().trim() || "Name not found";
-      $(element).find(".price-new").text().trim() ||
-        $(element).find(".price-normal").text().trim() ||
-        "Out Of Stock";
-      const img =
-        $(element).find(".product-img img").attr("src") || "Image not found";
-      const link =
-        $(element).find(".product-img").attr("href") || "Link not found";
+//     $(".product-layout").each((index, element) => {
+//       const name = $(element).find(".name").text().trim() || "Name not found";
+//       $(element).find(".price-new").text().trim() ||
+//         $(element).find(".price-normal").text().trim() ||
+//         "Out Of Stock";
+//       const img =
+//         $(element).find(".product-img img").attr("src") || "Image not found";
+//       const link =
+//         $(element).find(".product-img").attr("href") || "Link not found";
 
-      const id = crypto.randomUUID();
-      products.push({ id, name, price, img, link });
-    });
+//       const id = crypto.randomUUID();
+//       products.push({ id, name, price, img, link });
+//     });
 
-    return products;
-  } catch (error) {
-    console.error("Error scraping TechLand:", error);
-    return [];
-  }
-};
+//    return { products, logo };
+//   } catch (error) {
+//     console.error("Error scraping TechLand:", error);
+//     return [];
+//   }
+// };
+
 const scrapeUltraTech = async (product) => {
   try {
     const response = await axios.get(
@@ -200,7 +200,7 @@ const scrapeUltraTech = async (product) => {
     );
     const $ = cheerio.load(response.data);
     const products = [];
-
+    const logo = $("#logo img").attr("src") || "logo not found";
     $(".product-layout").each((index, element) => {
       const name = $(element).find(".name").text().trim() || "Name not found";
       const price =
@@ -214,7 +214,34 @@ const scrapeUltraTech = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return products;
+    return { products, logo };
+  } catch (error) {
+    console.error("Error scraping TechLand:", error);
+    return [];
+  }
+};
+const scrapeSkyLand = async (product) => {
+  try {
+    const response = await axios.get(
+      `https://www.skyland.com.bd/index.php?route=product/search&search=${product}`
+    );
+    const $ = cheerio.load(response.data);
+    const products = [];
+    const logo = $("#logo img").attr("src") || "logo not found";
+    $(".product-layout").each((index, element) => {
+      const name = $(element).find(".name").text().trim() || "Name not found";
+      const price =
+        $(element).find(".price-new").text().trim() || "Out Of Stock";
+      const img =
+        $(element).find(".product-img img").attr("src") || "Image not found";
+      const link =
+        $(element).find(".product-img").attr("href") || "Link not found";
+
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
+    });
+
+    return { products, logo };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -234,6 +261,7 @@ app.get("/scrape/:product", async (req, res) => {
     ultraProducts,
     // potakaProducts,
     pchouseProducts,
+    skyLandProducts,
   ] = await Promise.all([
     scrapeStarTech(product),
     scrapeTechLand(product),
@@ -242,17 +270,57 @@ app.get("/scrape/:product", async (req, res) => {
     // scrapePotakaIT(product),
     scrapePcHouse(product),
     scrapeUltraTech(product),
+    scrapeSkyLand(product),
   ]);
 
-  res.json({
-    StarTech: starTechProducts,
-    TechLand: techLandProducts,
-    Ryans: ryansProducts,
-    Binary: binaryProducts,
+  res.json([
+    {
+      name: "StarTech",
+      products: starTechProducts.products,
+      logo: starTechProducts.logo,
+    },
+    {
+      name: "TechLand",
+      products: techLandProducts.products,
+      logo: techLandProducts.logo,
+    },
+    {
+      name: "Ryans",
+      products: ryansProducts.products,
+      logo: ryansProducts.logo,
+    },
+    {
+      name: "Binary",
+      products: binaryProducts.products,
+      logo: binaryProducts.logo,
+    },
+    // { name: "PotakaIT",
+    //   products: potakaProducts.products,
+    //   logo: potakaProducts.logo,
+    // },
+    {
+      name: "PcHouse",
+      products: pchouseProducts.products,
+      logo: pchouseProducts.logo,
+    },
+    {
+      name: "UltraTech",
+      products: ultraProducts.products,
+      logo: ultraProducts.logo,
+    },
+    {
+      name: "SkyLand",
+      products: skyLandProducts.products,
+      logo: skyLandProducts.logo,
+    },
+    // TechLand: techLandProducts,
+    // Ryans: ryansProducts,
+    // Binary: binaryProducts,
     // PotakaIT: potakaProducts,
-    PcHouse: pchouseProducts,
-    UltraTech: ultraProducts,
-  });
+    // PcHouse: pchouseProducts,
+    // UltraTech: ultraProducts,
+    // SkyLand: skyLandProducts,
+  ]);
 });
 
 // Start the server
