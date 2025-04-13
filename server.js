@@ -30,7 +30,7 @@ const scrapeStarTech = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping StarTech:", error);
     return [];
@@ -59,7 +59,7 @@ const scrapeTechLand = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -86,7 +86,7 @@ const scrapeRyans = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -114,7 +114,7 @@ const scrapeBinary = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -141,7 +141,7 @@ const scrapePcHouse = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -186,7 +186,7 @@ const scrapePcHouse = async (product) => {
 //       products.push({ id, name, price, img, link });
 //     });
 
-//    return { products, logo };
+//    return { products: [], logo: "logo not found" };
 //   } catch (error) {
 //     console.error("Error scraping TechLand:", error);
 //     return [];
@@ -214,7 +214,7 @@ const scrapeUltraTech = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
@@ -241,7 +241,7 @@ const scrapeSkyLand = async (product) => {
       products.push({ id, name, price, img, link });
     });
 
-    return { products, logo };
+    return { products: [], logo: "logo not found" };
   } catch (error) {
     console.error("Error scraping TechLand:", error);
     return [];
