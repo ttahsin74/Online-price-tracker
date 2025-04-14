@@ -164,51 +164,6 @@ const scrapePcHouse = async (product) => {
     return [];
   }
 };
-// const scrapePotakaIT = async (product) => {
-//   try {
-//     const response = await axios.post(
-//       `https://www.potakait.com/index.php?route=product/search&search=${product}`,
-//       {
-//         headers: {
-//           "User-Agent":
-//             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-//           Accept: "application/json, text/plain, */*",
-//           "Accept-Encoding": "gzip, deflate, br",
-//           Connection: "keep-alive",
-//           "Upgrade-Insecure-Requests": "1",
-//           "Cache-Control": "max-age=0",
-//           TE: "Trailers",
-//           DNT: "1", // Do Not Track header
-//           Referer: "https://www.potakait.com", // Referer header may help
-//           Origin: "https://www.potakait.com", // Sometimes needed
-//           Cookie: "ar_debug=1",
-//         },
-//       }
-//     );
-
-//     const $ = cheerio.load(response.data);
-//     const products = [];
-
-//     $(".product-layout").each((index, element) => {
-//       const name = $(element).find(".name").text().trim() || "Name not found";
-//       $(element).find(".price-new").text().trim() ||
-//         $(element).find(".price-normal").text().trim() ||
-//         "Out Of Stock";
-//       const img =
-//         $(element).find(".product-img img").attr("src") || "Image not found";
-//       const link =
-//         $(element).find(".product-img").attr("href") || "Link not found";
-
-//       const id = crypto.randomUUID();
-//       products.push({ id, name, price, img, link });
-//     });
-
-//    return { products, logo };
-//   } catch (error) {
-//     console.error("Error scraping TechLand:", error);
-//     return [];
-//   }
-// };
 
 const scrapeUltraTech = async (product) => {
   try {
@@ -264,6 +219,51 @@ const scrapeSkyLand = async (product) => {
     return [];
   }
 };
+// const scrapePotakaIT = async (product) => {
+//   try {
+//     const response = await axios.post(
+//       `https://www.potakait.com/index.php?route=product/search&search=${product}`,
+//       {
+//         headers: {
+//           "User-Agent":
+//             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+//           Accept: "application/json, text/plain, */*",
+//           "Accept-Encoding": "gzip, deflate, br",
+//           Connection: "keep-alive",
+//           "Upgrade-Insecure-Requests": "1",
+//           "Cache-Control": "max-age=0",
+//           TE: "Trailers",
+//           DNT: "1", // Do Not Track header
+//           Referer: "https://www.potakait.com", // Referer header may help
+//           Origin: "https://www.potakait.com", // Sometimes needed
+//           Cookie: "ar_debug=1",
+//         },
+//       }
+//     );
+
+//     const $ = cheerio.load(response.data);
+//     const products = [];
+
+//     $(".product-layout").each((index, element) => {
+//       const name = $(element).find(".name").text().trim() || "Name not found";
+//       $(element).find(".price-new").text().trim() ||
+//         $(element).find(".price-normal").text().trim() ||
+//         "Out Of Stock";
+//       const img =
+//         $(element).find(".product-img img").attr("src") || "Image not found";
+//       const link =
+//         $(element).find(".product-img").attr("href") || "Link not found";
+
+//       const id = crypto.randomUUID();
+//       products.push({ id, name, price, img, link });
+//     });
+
+//    return { products, logo };
+//   } catch (error) {
+//     console.error("Error scraping TechLand:", error);
+//     return [];
+//   }
+// };
 
 // Combined API Endpoint
 app.get("/scrape/:product", async (req, res) => {
@@ -273,19 +273,19 @@ app.get("/scrape/:product", async (req, res) => {
   const [
     starTechProducts,
     techLandProducts,
+    skyLandProducts,
     ryansProducts,
-    binaryProducts,
     pchouseProducts,
     ultraProducts,
-    skyLandProducts,
+    binaryProducts,
   ] = await Promise.all([
     scrapeStarTech(product),
     scrapeTechLand(product),
+    scrapeSkyLand(product),
     scrapeRyans(product),
-    scrapeBinary(product),
     scrapePcHouse(product),
     scrapeUltraTech(product),
-    scrapeSkyLand(product),
+    scrapeBinary(product),
   ]);
 
   res.json([
@@ -300,19 +300,16 @@ app.get("/scrape/:product", async (req, res) => {
       logo: techLandProducts.logo,
     },
     {
+      name: "SkyLand",
+      products: skyLandProducts.products,
+      logo: skyLandProducts.logo,
+    },
+    {
       name: "Ryans",
       products: ryansProducts.products,
       logo: ryansProducts.logo,
     },
-    {
-      name: "Binary",
-      products: binaryProducts.products,
-      logo: binaryProducts.logo,
-    },
-    // { name: "PotakaIT",
-    //   products: potakaProducts.products,
-    //   logo: potakaProducts.logo,
-    // },
+
     {
       name: "PcHouse",
       products: pchouseProducts.products,
@@ -324,10 +321,14 @@ app.get("/scrape/:product", async (req, res) => {
       logo: ultraProducts.logo,
     },
     {
-      name: "SkyLand",
-      products: skyLandProducts.products,
-      logo: skyLandProducts.logo,
+      name: "Binary",
+      products: binaryProducts.products,
+      logo: binaryProducts.logo,
     },
+    // { name: "PotakaIT",
+    //   products: potakaProducts.products,
+    //   logo: potakaProducts.logo,
+    // },
     // TechLand: techLandProducts,
     // Ryans: ryansProducts,
     // Binary: binaryProducts,
