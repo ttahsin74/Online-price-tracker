@@ -192,6 +192,54 @@ const scrapeUltraTech = async (product) => {
     return [];
   }
 };
+const scrapeVibeGaming = async (product) => {
+  try {
+    const response = await axios.get(
+      `https://vibegaming.com.bd/?s=${product}&post_type=product`
+    );
+    const $ = cheerio.load(response.data);
+    const products = [];
+    const logo = $(".sticky-logo").attr("data-src") || "logo not found";
+    $(".product").each((index, element) => {
+      const name =
+        $(element).find(".product-name").text().trim() || "Name not found";
+
+      let lowestPrice = 0;
+      const priceElements = $(element).find(".amount");
+
+      if (priceElements.length > 0) {
+        let min = Infinity;
+        priceElements.each((i, el) => {
+          const text = $(el)
+            .text()
+            .replace(/[^\d.]/g, "");
+          const value = parseFloat(text);
+          if (!isNaN(value) && value < min) {
+            min = value;
+          }
+        });
+        if (min !== Infinity) {
+          lowestPrice = `৳${min.toLocaleString()}`;
+        }
+      }
+
+      const img =
+        $(element).find(".no-back-image img").attr("data-src") ||
+        "Image not found";
+      const link =
+        $(element).find(".thumbnail-wrapper a").attr("href") ||
+        "Link not found";
+      const id = crypto.randomUUID();
+
+      products.push({ id, name, price: lowestPrice, img, link });
+    });
+
+    return { products, logo };
+  } catch (error) {
+    console.error("Error scraping TechLand:", error);
+    return [];
+  }
+};
 const scrapeSkyLand = async (product) => {
   try {
     const response = await axios.get(
@@ -278,6 +326,7 @@ app.get("/scrape/:product", async (req, res) => {
     pchouseProducts,
     ultraProducts,
     binaryProducts,
+    VibeGamingProducts,
   ] = await Promise.all([
     scrapeStarTech(product),
     scrapeTechLand(product),
@@ -286,6 +335,7 @@ app.get("/scrape/:product", async (req, res) => {
     scrapePcHouse(product),
     scrapeUltraTech(product),
     scrapeBinary(product),
+    scrapeVibeGaming(product),
   ]);
 
   res.json([
@@ -319,6 +369,11 @@ app.get("/scrape/:product", async (req, res) => {
       name: "UltraTech",
       products: ultraProducts.products,
       logo: ultraProducts.logo,
+    },
+    {
+      name: "Vibe Gaming",
+      products: VibeGamingProducts.products,
+      logo: VibeGamingProducts.logo,
     },
     {
       name: "Binary",
