@@ -3,11 +3,25 @@ const cors = require("cors");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const crypto = require("crypto");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(cors());
 
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 10,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message:
+        "You're sending too many requests. Please wait a minute and try again.",
+    });
+  },
+});
+
+app.use(limiter);
 // Scraper for StarTech
 const scrapeStarTech = async (product) => {
   try {
