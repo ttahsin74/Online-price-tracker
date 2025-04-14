@@ -35,7 +35,10 @@ const scrapeStarTech = async (product) => {
       const name =
         $(element).find(".p-item-name").text().trim() || "Name not found";
       const price =
-        $(element).find(".price-new").text().trim() || "Out Of Stock";
+        $(element).find(".price-new").text().trim() ||
+        $(element).find(".p-item-price").text().trim() ||
+        "Out Of Stock";
+
       const img =
         $(element).find(".p-item-img img").attr("src") || "Image not found";
       const link =
