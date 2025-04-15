@@ -195,8 +195,14 @@ const scrapeUltraTech = async (product) => {
 const scrapeVibeGaming = async (product) => {
   try {
     const response = await axios.get(
-      `https://vibegaming.com.bd/?s=${product}&post_type=product`
+      `https://vibegaming.com.bd/?s=${product}&post_type=product`,
+      {
+        headers: {
+          "X-Forwarded-For": "119.30.41.88",
+        },
+      }
     );
+
     const $ = cheerio.load(response.data);
     const products = [];
     const logo = $(".sticky-logo").attr("data-src") || "logo not found";
@@ -306,14 +312,13 @@ const scrapeSkyLand = async (product) => {
 //       products.push({ id, name, price, img, link });
 //     });
 
-//    return { products, logo };
+//     return { products, logo };
 //   } catch (error) {
 //     console.error("Error scraping TechLand:", error);
 //     return [];
 //   }
 // };
 
-// Combined API Endpoint
 app.get("/scrape/:product", async (req, res) => {
   let product = req.params.product;
   product = product.replace(/\s+/g, "%20");
@@ -327,6 +332,7 @@ app.get("/scrape/:product", async (req, res) => {
     ultraProducts,
     binaryProducts,
     VibeGamingProducts,
+    // potakaProducts,
   ] = await Promise.all([
     scrapeStarTech(product),
     scrapeTechLand(product),
@@ -336,6 +342,7 @@ app.get("/scrape/:product", async (req, res) => {
     scrapeUltraTech(product),
     scrapeBinary(product),
     scrapeVibeGaming(product),
+    // scrapePotakaIT(product),
   ]);
 
   res.json([
@@ -380,7 +387,8 @@ app.get("/scrape/:product", async (req, res) => {
       products: binaryProducts.products,
       logo: binaryProducts.logo,
     },
-    // { name: "PotakaIT",
+    // {
+    //   name: "PotakaIT",
     //   products: potakaProducts.products,
     //   logo: potakaProducts.logo,
     // },
