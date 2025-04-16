@@ -192,60 +192,60 @@ const scrapeUltraTech = async (product) => {
     return [];
   }
 };
-const scrapeVibeGaming = async (product) => {
-  try {
-    const response = await axios.get(
-      `https://vibegaming.com.bd/?s=${product}&post_type=product`,
-      {
-        headers: {
-          "X-Forwarded-For": "119.30.41.88",
-        },
-      }
-    );
+// const scrapeVibeGaming = async (product) => {
+//   try {
+//     const response = await axios.get(
+//       `https://vibegaming.com.bd/?s=${product}&post_type=product`,
+//       {
+//         headers: {
+//           "X-Forwarded-For": "119.30.41.88",
+//         },
+//       }
+//     );
 
-    const $ = cheerio.load(response.data);
-    const products = [];
-    const logo = $(".sticky-logo").attr("data-src") || "logo not found";
-    $(".product").each((index, element) => {
-      const name =
-        $(element).find(".product-name").text().trim() || "Name not found";
+//     const $ = cheerio.load(response.data);
+//     const products = [];
+//     const logo = $(".sticky-logo").attr("data-src") || "logo not found";
+//     $(".product").each((index, element) => {
+//       const name =
+//         $(element).find(".product-name").text().trim() || "Name not found";
 
-      let lowestPrice = 0;
-      const priceElements = $(element).find(".amount");
+//       let lowestPrice = 0;
+//       const priceElements = $(element).find(".amount");
 
-      if (priceElements.length > 0) {
-        let min = Infinity;
-        priceElements.each((i, el) => {
-          const text = $(el)
-            .text()
-            .replace(/[^\d.]/g, "");
-          const value = parseFloat(text);
-          if (!isNaN(value) && value < min) {
-            min = value;
-          }
-        });
-        if (min !== Infinity) {
-          lowestPrice = `৳${min.toLocaleString()}`;
-        }
-      }
+//       if (priceElements.length > 0) {
+//         let min = Infinity;
+//         priceElements.each((i, el) => {
+//           const text = $(el)
+//             .text()
+//             .replace(/[^\d.]/g, "");
+//           const value = parseFloat(text);
+//           if (!isNaN(value) && value < min) {
+//             min = value;
+//           }
+//         });
+//         if (min !== Infinity) {
+//           lowestPrice = `৳${min.toLocaleString()}`;
+//         }
+//       }
 
-      const img =
-        $(element).find(".no-back-image img").attr("data-src") ||
-        "Image not found";
-      const link =
-        $(element).find(".thumbnail-wrapper a").attr("href") ||
-        "Link not found";
-      const id = crypto.randomUUID();
+//       const img =
+//         $(element).find(".no-back-image img").attr("data-src") ||
+//         "Image not found";
+//       const link =
+//         $(element).find(".thumbnail-wrapper a").attr("href") ||
+//         "Link not found";
+//       const id = crypto.randomUUID();
 
-      products.push({ id, name, price: lowestPrice, img, link });
-    });
+//       products.push({ id, name, price: lowestPrice, img, link });
+//     });
 
-    return { products, logo };
-  } catch (error) {
-    console.error("Error scraping TechLand:", error);
-    return [];
-  }
-};
+//     return { products, logo };
+//   } catch (error) {
+//     console.error("Error scraping TechLand:", error);
+//     return [];
+//   }
+// };
 const scrapeSkyLand = async (product) => {
   try {
     const response = await axios.get(
@@ -273,51 +273,52 @@ const scrapeSkyLand = async (product) => {
     return [];
   }
 };
-// const scrapePotakaIT = async (product) => {
-//   try {
-//     const response = await axios.post(
-//       `https://www.potakait.com/index.php?route=product/search&search=${product}`,
-//       {
-//         headers: {
-//           "User-Agent":
-//             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-//           Accept: "application/json, text/plain, */*",
-//           "Accept-Encoding": "gzip, deflate, br",
-//           Connection: "keep-alive",
-//           "Upgrade-Insecure-Requests": "1",
-//           "Cache-Control": "max-age=0",
-//           TE: "Trailers",
-//           DNT: "1", // Do Not Track header
-//           Referer: "https://www.potakait.com", // Referer header may help
-//           Origin: "https://www.potakait.com", // Sometimes needed
-//           Cookie: "ar_debug=1",
-//         },
-//       }
-//     );
+const scrapePotakaIT = async (product) => {
+  try {
+    const response = await axios.get(
+      `https://www.potakait.com/index.php?route=product/search&search=${product}`
+      // {
+      //   headers: {
+      //     "User-Agent":
+      //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      //     Accept: "application/json, text/plain, */*",
+      //     "Accept-Encoding": "gzip, deflate, br",
+      //     Connection: "keep-alive",
+      //     "Upgrade-Insecure-Requests": "1",
+      //     "Cache-Control": "max-age=0",
+      //     TE: "Trailers",
+      //     DNT: "1", // Do Not Track header
+      //     Referer: "https://www.potakait.com", // Referer header may help
+      //     Origin: "https://www.potakait.com", // Sometimes needed
+      //     Cookie: "ar_debug=1",
+      //   },
+      // }
+    );
 
-//     const $ = cheerio.load(response.data);
-//     const products = [];
+    const $ = cheerio.load(response.data);
+    const products = [];
+    const logo = $("#logo img").attr("src") || "logo not found";
+    $(".product-layout").each((index, element) => {
+      const name = $(element).find(".name").text().trim() || "Name not found";
+      const price =
+        $(element).find(".price-new").text().trim() ||
+        $(element).find(".price-normal").text().trim() ||
+        "Out Of Stock";
+      const img =
+        $(element).find(".product-img img").attr("src") || "Image not found";
+      const link =
+        $(element).find(".product-img").attr("href") || "Link not found";
 
-//     $(".product-layout").each((index, element) => {
-//       const name = $(element).find(".name").text().trim() || "Name not found";
-//       $(element).find(".price-new").text().trim() ||
-//         $(element).find(".price-normal").text().trim() ||
-//         "Out Of Stock";
-//       const img =
-//         $(element).find(".product-img img").attr("src") || "Image not found";
-//       const link =
-//         $(element).find(".product-img").attr("href") || "Link not found";
+      const id = crypto.randomUUID();
+      products.push({ id, name, price, img, link });
+    });
 
-//       const id = crypto.randomUUID();
-//       products.push({ id, name, price, img, link });
-//     });
-
-//     return { products, logo };
-//   } catch (error) {
-//     console.error("Error scraping TechLand:", error);
-//     return [];
-//   }
-// };
+    return { products, logo };
+  } catch (error) {
+    console.error("Error scraping PotakaIt:", error);
+    return [];
+  }
+};
 
 app.get("/scrape/:product", async (req, res) => {
   let product = req.params.product;
@@ -331,8 +332,8 @@ app.get("/scrape/:product", async (req, res) => {
     pchouseProducts,
     ultraProducts,
     binaryProducts,
-    VibeGamingProducts,
-    // potakaProducts,
+    // VibeGamingProducts,
+    potakaProducts,
   ] = await Promise.all([
     scrapeStarTech(product),
     scrapeTechLand(product),
@@ -341,8 +342,8 @@ app.get("/scrape/:product", async (req, res) => {
     scrapePcHouse(product),
     scrapeUltraTech(product),
     scrapeBinary(product),
-    scrapeVibeGaming(product),
-    // scrapePotakaIT(product),
+    // scrapeVibeGaming(product),
+    scrapePotakaIT(product),
   ]);
 
   res.json([
@@ -377,21 +378,21 @@ app.get("/scrape/:product", async (req, res) => {
       products: ultraProducts.products,
       logo: ultraProducts.logo,
     },
-    {
-      name: "Vibe Gaming",
-      products: VibeGamingProducts.products,
-      logo: VibeGamingProducts.logo,
-    },
+    // {
+    //   name: "Vibe Gaming",
+    //   products: VibeGamingProducts.products,
+    //   logo: VibeGamingProducts.logo,
+    // },
     {
       name: "Binary",
       products: binaryProducts.products,
       logo: binaryProducts.logo,
     },
-    // {
-    //   name: "PotakaIT",
-    //   products: potakaProducts.products,
-    //   logo: potakaProducts.logo,
-    // },
+    {
+      name: "PotakaIT",
+      products: potakaProducts.products,
+      logo: potakaProducts.logo,
+    },
     // TechLand: techLandProducts,
     // Ryans: ryansProducts,
     // Binary: binaryProducts,
