@@ -9,5 +9,6 @@ export const scraperSources = [
     { key: "ultra", name: "UltraTech" },
     { key: "binary", name: "Binary" },
     { key: "potaka", name: "PotakaIT" },
+    { key: "daraz", name: "Daraz" },
   ];
   

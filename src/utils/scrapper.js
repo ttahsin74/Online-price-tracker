@@ -170,6 +170,31 @@ export async function scrapeStarTech(product) {
     return { name: "PotakaIT", products, logo };
   }
   
+  export async function scrapeDaraz(product) {
+    const url = `https://www.daraz.com.bd/catalog/?spm=a2a0e.tm80335411.search.d_go&q=${encodeURIComponent(product)}`;
+    const $ = await fetchHtml(url);
+    const products = [];
+    const logo = $("#logo img").attr("src") || "logo not found";
+  
+    $(".product-layout").each((_, element) => {
+      const name = $(element).find(".name").text().trim() || "Name not found";
+      const price =
+        $(element).find(".price-new").text().trim() ||
+        $(element).find(".price-normal").text().trim() ||
+        "Out Of Stock";
+      const img =
+        $(element).find(".product-img img").attr("data-src") ||
+        $(element).find(".product-img img").attr("data-lazy") ||
+        "Image not found";
+      const link = $(element).find(".product-img").attr("href") || "Link not found";
+      const id = genId();
+  
+      products.push({ id, name, price, img, link });
+    });
+  
+    return { name: "Daraz", products, logo };
+  }
+  
 
   export const Scrapper= {
     scrapeStarTech,
@@ -180,5 +205,6 @@ export async function scrapeStarTech(product) {
     scrapeUltraTech,
     // scrapeVibeGaming,
     scrapeSkyLand,
-    scrapePotakaIT
+    scrapePotakaIT,
+    scrapeDaraz
   }

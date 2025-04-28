@@ -10,6 +10,7 @@ const getAllScrape = async (product) => {
       ultra,
       binary,
       potaka,
+      daraz,
     ] = await Promise.all([
       Scrapper.scrapeStarTech(product),
       Scrapper.scrapeTechLand(product),
@@ -19,6 +20,7 @@ const getAllScrape = async (product) => {
       Scrapper.scrapeUltraTech(product),
       Scrapper.scrapeBinary(product),
       Scrapper.scrapePotakaIT(product),
+      Scrapper.scrapeDaraz(product),
     ]);
   
     return {
@@ -30,6 +32,7 @@ const getAllScrape = async (product) => {
       ultra,
       binary,
       potaka,
+      daraz
     };
   };
   
